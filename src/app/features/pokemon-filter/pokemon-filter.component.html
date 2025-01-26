@@ -1,0 +1,23 @@
+<ion-header>
+  <div class="flex flex-col gap-0 mb-5">
+    <ion-segment
+      class="mx-[12px]"
+      color="light"
+      [scrollable]="true"
+      (ionChange)="onFilterTypeChange($event)"
+      value=""
+    >
+      <ion-segment-button value="">All</ion-segment-button>
+      <ion-segment-button *ngFor="let type of types" [value]="type">
+        {{ type | titlecase }}
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-searchbar
+      [(ngModel)]="searchQuery"
+      color="dark"
+      placeholder="Search Pokémon..."
+      (ionInput)="onSearchQueryChange()"
+    ></ion-searchbar>
+  </div>
+</ion-header>

@@ -1,0 +1,108 @@
+<ion-header class="border-none">
+  <div class="p-2" [ngClass]="[defaultColor.bgColor, defaultColor.textColor]">
+    <ion-buttons class="border-transparent" slot="start">
+      <ion-back-button
+        class="text-sm font-medium"
+        [ngClass]="[defaultColor.textColor]"
+        defaultHref="/"
+      ></ion-back-button>
+    </ion-buttons>
+    <!-- <ion-title class="border-transparent text-lg font-semibold">{{
+      pokemon?.name | titlecase
+    }}</ion-title> -->
+  </div>
+</ion-header>
+
+<ion-content>
+  @if (pokemon) {
+  <div
+    class="flex justify-center rounded-b-3xl"
+    [ngClass]="[defaultColor.bgColor]"
+  >
+    <div
+      class="max-w-[600px] w-full pt-4 px-4 flex flex-col justify-center gap-2"
+      [ngClass]="[defaultColor.textColor]"
+    >
+      <div class="w-full flex flex-row justify-between items-center">
+        <h1 class="text-3xl font-bold">{{ pokemon.name | titlecase }}</h1>
+        <p class="font-bold">#{{ pokemon.id | zeroPad }}</p>
+      </div>
+      <div class="flex flex-row gap-2">
+        @for (type of pokemon.types; track type) {
+        <span
+          class="px-4 py-2 text-xs font-medium text-white rounded-lg"
+          [ngClass]="[
+            getTypeClasses(type.type.name).bgColor,
+            getTypeClasses(type.type.name).textColor
+          ]"
+        >
+          {{ type.type.name | titlecase }}
+        </span>
+        }
+      </div>
+      <div class="w-full flex justify-center mt-10">
+        <div class="w-80 h-80 rounded-full bg-gray-800 bg-opacity-5"></div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="pokemon-detail-container relative flex flex-col justify-center items-center"
+  >
+    @if (pokemon?.image) {
+    <div class="absolute z-10 -top-96">
+      <img
+        [src]="pokemon.image"
+        [alt]="pokemon.name"
+        loading="lazy"
+        class="w-auto h-auto cursor-pointer hover:scale-105 transition-transform"
+      />
+    </div>
+    }
+
+    <!-- <ion-button
+        color="warning"
+        expand="block"
+        (click)="toggleFavorite()"
+        [fill]="isFavorite ? 'solid' : 'outline'"
+      >
+        {{ isFavorite ? "Unfavorite" : "Favorite" }}
+      </ion-button> -->
+    <div
+      class="absolute -top-10 rounded-t-3xl w-full h-auto flex flex-col bg-[#212121] pt-24 pb-20 px-4"
+    >
+      <div class="flex flex-col gap-6">
+        <h2 class="text-xl font-semibold text-center">Abilities</h2>
+        <div class="flex flex-row gap-2 justify-center">
+          @for (ability of pokemon.abilities; track ability) {
+          <ion-chip color="light">
+            {{ ability.ability.name | titlecase }}
+          </ion-chip>
+          }
+        </div>
+        <h2 class="text-xl font-semibold text-center">Stats</h2>
+
+        <div class="flex flex-col gap-2">
+          @for (stat of pokemon?.stats; track stat) {
+          <div class="flex flex-row justify-center items-center gap-4">
+            <div class="w-5/6 text-right">{{ stat.stat.name | titlecase }}</div>
+            <div class="w-full">{{ stat.base_stat }}</div>
+          </div>
+          }
+          <div class="flex flex-row justify-center items-center gap-4">
+            <div class="w-5/6 text-right">Height</div>
+            <div class="w-full">{{ pokemon?.height }} decimetres</div>
+          </div>
+          <div class="flex flex-row justify-center items-center gap-4">
+            <div class="w-5/6 text-right">Weight</div>
+            <div class="w-full">{{ pokemon?.weight }} hectograms</div>
+          </div>
+          <div class="flex flex-row justify-center items-center gap-4">
+            <div class="w-5/6 text-right">Base Experience</div>
+            <div class="w-full">{{ pokemon?.base_experience }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</ion-content>
