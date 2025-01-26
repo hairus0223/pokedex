@@ -59,25 +59,25 @@ The following third-party libraries and tools are used in this project:
 1. **Get Pokémon List:**
    Fetches a list of Pokémon with pagination support (using offset and limit).
 
-- **URL:** https://pokeapi.co/api/v2/pokemon?offset={offset}&limit={limit}
-- **Method:** GET
-- **Parameters:**
-- - offset: The number of Pokémon to skip before starting to fetch (default: 0).
-- - limit: The maximum number of Pokémon to return per request (default: 20).
-- **Response:** A list of Pokémon with basic information (name, URL to images, etc.).
+   - **URL:** https://pokeapi.co/api/v2/pokemon?offset={offset}&limit={limit}
+   - **Method:** GET
+   - **Parameters:**
+     - offset: The number of Pokémon to skip before starting to fetch (default: 0).
+     - limit: The maximum number of Pokémon to return per request (default: 20).
+   - **Response:** A list of Pokémon with basic information (name, URL to images, etc.).
 
 2. **Get Pokémon Details:**
    Fetches detailed information about a specific Pokémon, including its stats, abilities, and other attributes.
 
-- **URL:** https://pokeapi.co/api/v2/pokemon/{name}
-- **Method:** GET
-- **Parameters:**
-- - name: The name of the Pokémon to fetch details for (e.g., "bulbasaur").
-- **Response:** Detailed data about the Pokémon, such as abilities, stats, and images.
+   - **URL:** https://pokeapi.co/api/v2/pokemon/{name}
+   - **Method:** GET
+   - **Parameters:**
+     - name: The name of the Pokémon to fetch details for (e.g., "bulbasaur").
+   - **Response:** Detailed data about the Pokémon, such as abilities, stats, and images.
 
 3. **Get Pokémon Types:**
    Fetches a list of all available Pokémon types (e.g., Water, Grass, Fire, Ghost, Flying).
 
-- **URL:** https://pokeapi.co/api/v2/type
-- **Method:** GET
-- **Response:** A list of all Pokémon types that can be used to filter Pokémon in the app.
+   - **URL:** https://pokeapi.co/api/v2/type
+   - **Method:** GET
+   - **Response:** A list of all Pokémon types that can be used to filter Pokémon in the app.
