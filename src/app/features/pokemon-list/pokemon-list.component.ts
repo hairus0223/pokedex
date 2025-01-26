@@ -86,7 +86,6 @@ export class PokemonListComponent implements OnInit {
 
   // For scroll events
   onContentScroll(event: any): void {
-    console.log('Scroll Position:', event.target?.scrollTop);
     const scrollPosition = event.detail.scrollTop || 0;
     this.isFabVisible = scrollPosition > 200; // Show FAB only after scrolling down 200px
   }
@@ -94,7 +93,7 @@ export class PokemonListComponent implements OnInit {
   // Scroll to the top of the page
   scrollToTop() {
     if (this.content) {
-      this.content.scrollToTop(1000); // Smooth scroll to top over 500ms
+      this.content.scrollToTop(1000); // Smooth scroll to top over 1000ms
     }
   }
 
@@ -127,7 +126,6 @@ export class PokemonListComponent implements OnInit {
   async loadFavorites() {
     this.favorites = await this.favouritesService.getFavoritePokemons();
 
-    // If the segment is 'favorites', adjust the pokemonTypes based on the favorite Pokémon
     if (this.selectedSegment === 'favorites') {
       const favoritePokemons = this.pokemons.filter((pokemon) =>
         this.favorites.includes(pokemon.name)
@@ -135,14 +133,12 @@ export class PokemonListComponent implements OnInit {
       const favoriteTypes = favoritePokemons.flatMap(
         (pokemon) => pokemon.types
       );
-      this.pokemonTypes = Array.from(new Set(favoriteTypes)); // Unique types of favorite Pokémon
+      this.pokemonTypes = Array.from(new Set(favoriteTypes));
     } else {
-      // Otherwise, show types of all Pokémon
       const allTypes = this.pokemons.flatMap((pokemon) => pokemon.types);
-      this.pokemonTypes = Array.from(new Set(allTypes)); // Unique types of all Pokémon
+      this.pokemonTypes = Array.from(new Set(allTypes));
     }
 
-    // Apply filters after loading favorites
     this.applyFilters();
   }
 
@@ -162,28 +158,18 @@ export class PokemonListComponent implements OnInit {
 
   // Apply search and type filters
   applyFilters() {
-    if (this.selectedSegment === 'favorites') {
-      // Show only favorite Pokémon that match the search and type filter
-      this.filteredPokemons = this.pokemons.filter((pokemon) => {
-        const isFavorite = this.favorites.includes(pokemon.name);
-        const matchesSearch = pokemon.name
-          .toLowerCase()
-          .includes(this.searchQuery.toLowerCase());
-        const matchesType =
-          !this.selectedType || pokemon.types?.includes(this.selectedType);
-        return isFavorite && matchesSearch && matchesType;
-      });
-    } else {
-      // Show all Pokémon (filtered by search and type)
-      this.filteredPokemons = this.pokemons.filter((pokemon) => {
-        const matchesSearch = pokemon.name
-          .toLowerCase()
-          .includes(this.searchQuery.toLowerCase());
-        const matchesType =
-          !this.selectedType || pokemon.types?.includes(this.selectedType);
-        return matchesSearch && matchesType;
-      });
-    }
+    this.filteredPokemons = this.pokemons.filter((pokemon) => {
+      const matchesSearch = pokemon.name
+        .toLowerCase()
+        .includes(this.searchQuery.toLowerCase());
+      const matchesType =
+        !this.selectedType || pokemon.types?.includes(this.selectedType);
+      const isFavorite =
+        this.selectedSegment === 'favorites'
+          ? this.favorites.includes(pokemon.name)
+          : true;
+      return matchesSearch && matchesType && isFavorite;
+    });
   }
 
   // Handle search input change
