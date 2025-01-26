@@ -1,44 +1,37 @@
-// src/app/core/services/favourites.service.ts
 import { Injectable } from '@angular/core';
-// import { Preferences } from '@capacitor/preferences';
+import { Preferences } from '@capacitor/preferences';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FavouritesService {
-  private key = 'favourites';
+  private favoriteKey = 'favoritePokemons';
 
-  // Add a Pokémon to the favorites list
-  async addFavourite(pokemon: any) {
-    // const favourites = await this.getFavourites();
-    // if (!favourites.find((fav) => fav.name === pokemon.name)) {
-    //   favourites.push(pokemon);
-    //   // await Preferences.set({
-    //   //   key: this.key,
-    //   //   value: JSON.stringify(favourites),
-    //   // });
-    // }
+  // Get favorite Pokémon from Capacitor Preferences
+  async getFavoritePokemons(): Promise<string[]> {
+    const { value } = await Preferences.get({ key: this.favoriteKey });
+    return value ? JSON.parse(value) : [];
   }
 
-  // Get the list of favorite Pokémon
-  // async getFavourites(): Promise<any[]> {
-  // const { value } = await Preferences.get({ key: this.key });
-  // return value ? JSON.parse(value) : [];
-  // }
-
-  // Remove a Pokémon from the favorites list
-  async removeFavourite(name: string) {
-    // const favourites = await this.getFavourites();
-    // const updated = favourites.filter((pokemon) => pokemon.name !== name);
-    // await Preferences.set({
-    //   key: this.key,
-    //   value: JSON.stringify(updated),
-    // });
+  // Set a favorite Pokémon in Capacitor Preferences
+  async setFavoritePokemon(pokemonName: string): Promise<void> {
+    const favorites = await this.getFavoritePokemons();
+    if (!favorites.includes(pokemonName)) {
+      favorites.push(pokemonName);
+      await Preferences.set({
+        key: this.favoriteKey,
+        value: JSON.stringify(favorites),
+      });
+    }
   }
 
-  // Check if a Pokémon is in the favorites list
-  // async isFavourite(name: string): Promise<boolean> {
-  //   const favourites = await this.getFavourites();
-  //   return favourites.some((pokemon) => pokemon.name === name);
-  // }
+  // Remove a Pokémon from the favorites
+  async removeFavoritePokemon(pokemonName: string): Promise<void> {
+    const favorites = await this.getFavoritePokemons();
+    const updatedFavorites = favorites.filter((name) => name !== pokemonName);
+    await Preferences.set({
+      key: this.favoriteKey,
+      value: JSON.stringify(updatedFavorites),
+    });
+  }
 }
