@@ -1,0 +1,33 @@
+/* variables.scss */
+
+/* Base Colors */
+:root {
+  --ion-color-primary: #ffb444;
+  --ion-color-secondary: #b2ffe2;
+
+  /* Custom Background Colors */
+  --ion-background-color-light: #f5f5f5; /* Light theme background */
+  --ion-background-color-dark: #121212; /* Dark theme background */
+  --ion-gradient-background: linear-gradient(135deg, #ff7eb3, #ff758c);
+
+  /* Custom Text Colors */
+  --ion-text-color-light: #000; /* Light theme text color */
+  --ion-text-color-dark: #fff; /* Dark theme text color */
+
+  /* Font Settings */
+  --ion-font-family: "Space Grotesk", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: var(--ion-background-color-dark);
+    --ion-text-color: var(--ion-text-color-dark);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --ion-background-color: var(--ion-background-color-light);
+    --ion-text-color: var(--ion-text-color-light);
+  }
+}
