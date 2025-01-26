@@ -1,4 +1,8 @@
-<ion-content class="ion-padding">
+<ion-content
+  class="ion-padding"
+  [scrollEvents]="true"
+  (ionScroll)="onContentScroll($event)"
+>
   <div class="flex flex-col gap-4 p-0">
     <div class="flex flex-col gap-1 px-[11px]">
       <h1 class="text-3xl font-semibold p-0 m-0">Pokedex</h1>
@@ -15,12 +19,11 @@
     <ion-row>
       @for (pokemon of filteredPokemons; track pokemon; let index = $index) {
       <ion-col size="6" size-md="4" size-lg="3">
-        <!-- <app-pokemon-card
+        <app-pokemon-card
           [pokemon]="pokemon"
-          [isFavorite]="isFavorite(pokemon)"
-          (toggleFavorite)="toggleFavorite(pokemon)"
-        ></app-pokemon-card> -->
-        <app-pokemon-card [pokemon]="pokemon"></app-pokemon-card>
+          [favorites]="favorites"
+          (toggleFavorite)="toggleFavorite($event)"
+        ></app-pokemon-card>
       </ion-col>
       }
     </ion-row>
@@ -31,15 +34,27 @@
       loadingSpinner="bubbles"
     ></ion-infinite-scroll-content>
   </ion-infinite-scroll>
+
+  @if (isFabVisible) {
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button size="small" color="light" (click)="scrollToTop()">
+      <ion-icon name="arrow-up-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  }
 </ion-content>
 
 <ion-footer>
   <ion-toolbar color="dark" class="ion-padding py-0">
-    <ion-segment value="default" class="w-full">
+    <ion-segment
+      value="default"
+      class="w-full"
+      (ionChange)="onSegmentChange($event)"
+    >
       <ion-segment-button value="default">
         <ion-label>All</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="segment">
+      <ion-segment-button value="favorites">
         <ion-label>Favorites</ion-label>
       </ion-segment-button>
     </ion-segment>

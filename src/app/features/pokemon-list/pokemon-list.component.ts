@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PokemonService } from '../../core/services/pokemon.service';
 import { PokemonCardComponent } from '../../shared/components/pokemon-card/pokemon-card.component';
 import {
@@ -9,25 +9,31 @@ import {
   IonCol,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
-  IonHeader,
   InfiniteScrollCustomEvent,
   IonToolbar,
-  IonTitle,
-  IonSearchbar,
   IonFooter,
   IonSegmentButton,
   IonSegment,
   IonLabel,
+  IonFab,
+  IonIcon,
+  IonFabButton,
 } from '@ionic/angular/standalone';
-import { Pokemon, PokemonType } from '../../core/models/pokemon.model';
+import { Pokemon } from '../../core/models/pokemon.model';
 import { PokemonFilterComponent } from '../pokemon-filter/pokemon-filter.component';
 import { FavouritesService } from '../../core/services/favourites.service';
 import { getPokemonImageUrl } from '../../core/utils/pokemon-utils';
+import { Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { arrowUpOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-pokemon-list',
   standalone: true,
   imports: [
+    IonFabButton,
+    IonIcon,
+    IonFab,
     IonLabel,
     IonSegment,
     IonSegmentButton,
@@ -48,21 +54,48 @@ import { getPokemonImageUrl } from '../../core/utils/pokemon-utils';
   styleUrl: './pokemon-list.component.scss',
 })
 export class PokemonListComponent implements OnInit {
+  @ViewChild(IonContent) content!: IonContent;
   pokemons: any[] = [];
   filteredPokemons: Pokemon[] = [];
+  favorites: any = [];
   pokemonTypes: string[] = [];
   searchQuery = '';
   selectedType = '';
   offset = 0;
   limit = 20;
+  selectedSegment = 'default';
+  isFabVisible: boolean = false;
 
-  private favouritesService = inject(FavouritesService);
-
-  constructor(private pokemonService: PokemonService) {}
+  constructor(
+    private router: Router,
+    private pokemonService: PokemonService,
+    private favouritesService: FavouritesService
+  ) {
+    addIcons({ arrowUpOutline });
+  }
 
   ngOnInit() {
     this.loadPokemon();
+    this.loadFavorites();
     // this.loadPokemonTypes();
+    this.router.events.subscribe(() => {
+      this.loadFavorites();
+      this.applyFilters();
+    });
+  }
+
+  // For scroll events
+  onContentScroll(event: any): void {
+    console.log('Scroll Position:', event.target?.scrollTop);
+    const scrollPosition = event.detail.scrollTop || 0;
+    this.isFabVisible = scrollPosition > 200; // Show FAB only after scrolling down 200px
+  }
+
+  // Scroll to the top of the page
+  scrollToTop() {
+    if (this.content) {
+      this.content.scrollToTop(1000); // Smooth scroll to top over 500ms
+    }
   }
 
   // Load the list of Pokémon with pagination
@@ -91,11 +124,33 @@ export class PokemonListComponent implements OnInit {
       });
   }
 
+  async loadFavorites() {
+    this.favorites = await this.favouritesService.getFavoritePokemons();
+
+    // If the segment is 'favorites', adjust the pokemonTypes based on the favorite Pokémon
+    if (this.selectedSegment === 'favorites') {
+      const favoritePokemons = this.pokemons.filter((pokemon) =>
+        this.favorites.includes(pokemon.name)
+      );
+      const favoriteTypes = favoritePokemons.flatMap(
+        (pokemon) => pokemon.types
+      );
+      this.pokemonTypes = Array.from(new Set(favoriteTypes)); // Unique types of favorite Pokémon
+    } else {
+      // Otherwise, show types of all Pokémon
+      const allTypes = this.pokemons.flatMap((pokemon) => pokemon.types);
+      this.pokemonTypes = Array.from(new Set(allTypes)); // Unique types of all Pokémon
+    }
+
+    // Apply filters after loading favorites
+    this.applyFilters();
+  }
+
   onIonInfinite(event: InfiniteScrollCustomEvent) {
     this.loadPokemon();
     setTimeout(() => {
       event.target.complete();
-    }, 500);
+    }, 1000);
   }
 
   // Load the Pokémon types for the filter dropdown
@@ -107,14 +162,28 @@ export class PokemonListComponent implements OnInit {
 
   // Apply search and type filters
   applyFilters() {
-    this.filteredPokemons = this.pokemons.filter((pokemon) => {
-      const matchesSearch = pokemon.name
-        .toLowerCase()
-        .includes(this.searchQuery.toLowerCase());
-      const matchesType =
-        !this.selectedType || pokemon.types?.includes(this.selectedType);
-      return matchesSearch && matchesType;
-    });
+    if (this.selectedSegment === 'favorites') {
+      // Show only favorite Pokémon that match the search and type filter
+      this.filteredPokemons = this.pokemons.filter((pokemon) => {
+        const isFavorite = this.favorites.includes(pokemon.name);
+        const matchesSearch = pokemon.name
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase());
+        const matchesType =
+          !this.selectedType || pokemon.types?.includes(this.selectedType);
+        return isFavorite && matchesSearch && matchesType;
+      });
+    } else {
+      // Show all Pokémon (filtered by search and type)
+      this.filteredPokemons = this.pokemons.filter((pokemon) => {
+        const matchesSearch = pokemon.name
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase());
+        const matchesType =
+          !this.selectedType || pokemon.types?.includes(this.selectedType);
+        return matchesSearch && matchesType;
+      });
+    }
   }
 
   // Handle search input change
@@ -129,18 +198,19 @@ export class PokemonListComponent implements OnInit {
     this.applyFilters();
   }
 
-  // Handle favoriting/unfavoriting a Pokémon
-  // async toggleFavorite(pokemon: Pokemon) {
-  //   const isFavorite = await this.favouritesService.isFavourite(pokemon.name);
-  //   if (isFavorite) {
-  //     await this.favouritesService.removeFavourite(pokemon.name);
-  //   } else {
-  //     await this.favouritesService.addFavourite(pokemon);
-  //   }
-  // }
+  async toggleFavorite(pokemon: any) {
+    if (this.favorites.includes(pokemon.name)) {
+      await this.favouritesService.removeFavoritePokemon(pokemon.name);
+    } else {
+      await this.favouritesService.setFavoritePokemon(pokemon.name);
+    }
+    this.loadFavorites();
+    this.applyFilters();
+  }
 
-  // // Check if a Pokémon is favorited
-  // async isFavorite(pokemon: Pokemon): Promise<boolean> {
-  //   return await this.favouritesService.isFavourite(pokemon.name);
-  // }
+  onSegmentChange(event: any) {
+    this.selectedSegment = event.detail.value;
+    this.loadFavorites();
+    this.applyFilters();
+  }
 }

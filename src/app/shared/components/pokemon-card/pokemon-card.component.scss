@@ -11,8 +11,7 @@
   text-transform: capitalize;
 
   &:hover {
-    @apply text-orange-600;
-    background-color: #fee7f2;
+    @apply text-orange-600 bg-[#fee7f2];
     transition: background-color 300ms ease;
   }
 

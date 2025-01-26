@@ -33,26 +33,22 @@
   </div>
 </div>
 <div class="absolute z-10 right-2 top-2">
-  <!-- <ion-button
-    (click)="toggleFavorite()"
-    fill="clear"
-    color="light"
-    [class.text-red-500]="isFavorited"
-  >
+  <ion-button fill="clear" (click)="toggleFavorite.emit(pokemon)">
+    @if(favorites.includes(pokemon.name)){
     <ion-icon
       slot="icon-only"
       size="large"
+      class="text-orange-600"
       name="heart"
-      aria-label="Favorite"
     ></ion-icon>
-  </ion-button> -->
-  <!-- <ion-button (click)="toggleFavorite.emit()" color="light">
+    }@else{
     <ion-icon
-      name="heart"
-      [color]="isFavorite ? 'danger' : 'medium'"
-      slot="start"
+      slot="icon-only"
+      size="large"
+      class="text-gray-100"
+      name="heart-outline"
     ></ion-icon>
-    {{ isFavorite ? "Unfavorite" : "Favorite" }}
-  </ion-button> -->
+    }
+  </ion-button>
 </div>
 }
