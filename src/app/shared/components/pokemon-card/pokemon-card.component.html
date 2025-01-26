@@ -1,0 +1,58 @@
+@if (pokemon) {
+<div
+  class="container"
+  [routerLink]="['/pokemon', pokemon.name]"
+  routerDirection="forward"
+>
+  <img
+    class="pokemon-image"
+    loading="lazy"
+    [src]="pokemon.image"
+    alt="{{ pokemon.name }}"
+  />
+  <div class="pokemon-card flex flex-row justify-between items-end p-2">
+    <div class="flex flex-col gap-0">
+      <div class="text-sm font-normal">#{{ pokemon.id | zeroPad }}</div>
+      <div class="text-lg font-semibold">
+        {{ pokemon.name }}
+      </div>
+    </div>
+    <div class="flex flex-col gap-1 pb-2">
+      @for (type of pokemon.types; track type) {
+      <span
+        class="px-2 py-0 text-xs font-medium text-white rounded-lg"
+        [ngClass]="[
+          getTypeClasses(type).bgColor,
+          getTypeClasses(type).textColor
+        ]"
+      >
+        {{ type }}
+      </span>
+      }
+    </div>
+  </div>
+</div>
+<div class="absolute z-10 right-2 top-2">
+  <!-- <ion-button
+    (click)="toggleFavorite()"
+    fill="clear"
+    color="light"
+    [class.text-red-500]="isFavorited"
+  >
+    <ion-icon
+      slot="icon-only"
+      size="large"
+      name="heart"
+      aria-label="Favorite"
+    ></ion-icon>
+  </ion-button> -->
+  <!-- <ion-button (click)="toggleFavorite.emit()" color="light">
+    <ion-icon
+      name="heart"
+      [color]="isFavorite ? 'danger' : 'medium'"
+      slot="start"
+    ></ion-icon>
+    {{ isFavorite ? "Unfavorite" : "Favorite" }}
+  </ion-button> -->
+</div>
+}
