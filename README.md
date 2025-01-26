@@ -1,60 +1,83 @@
-# Pokedex
+# Pokedox
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.1.
+Pokedox is an Angular application built with Ionic, Tailwind CSS, and Capacitor that allows Pokémon trainers to browse, view details, and favourite Pokémon. The application provides an infinite scrolling experience and allows filtering Pokémon by type (e.g., Water, Grass, Fire, Ghost, Flying).
 
-## Development server
+## Features
 
-To start a local development server, run:
+- Pokémon trainers can browse Pokémon in an infinite scrolling method to view all Pokémon without interruption.
+- Pokémon trainers can view detailed information about each Pokémon.
+- Pokémon trainers can view images of each Pokémon.
+- Pokémon trainers can favourite certain Pokémon and view the list of favoured Pokémon.
+- Pokémon trainers can filter Pokémon based on their types (e.g., Water, Grass, Fire, Ghost, Flying).
+
+## Setup Instructions
+
+To set up the Pokedox project on your local machine, follow these steps:
+
+1. **Clone the repository:**
+
+```bash
+git clone git@github.com:hairus0223/pokedex.git
+```
+
+2. **Navigate to the project folder:**
+
+```bash
+cd pokedex
+```
+
+3. **Install dependencies: Ensure you have Angular CLI installed and then run::**
+
+```bash
+yarn install
+# or
+npm install
+```
+
+4. **Run the application: Start the Angular development server:**
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+This will start the application on http://localhost:4200. Open the URL in your browser.
 
-## Code scaffolding
+## Third-Party Libraries
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+The following third-party libraries and tools are used in this project:
 
-```bash
-ng generate component component-name
-```
+- **Angular**: The core framework used to build the application.
+  Version: 19 or higher
+- **Ionic**: A popular framework for building cross-platform mobile applications.
+- **tailwindcss**: A utility-first CSS framework for styling. Used for layout styling, form controls, and UI components.
+- **Capacitor**: A cross-platform native runtime for building web applications into mobile apps.
+- **RxJS**: A library for reactive programming used for handling asynchronous data streams.
+- **TypeScript**: The language used for development, ensuring type safety and better maintainability.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## API Endpoints
 
-```bash
-ng generate --help
-```
+1. **Get Pokémon List:**
+   Fetches a list of Pokémon with pagination support (using offset and limit).
 
-## Building
+- **URL:** https://pokeapi.co/api/v2/pokemon?offset={offset}&limit={limit}
+- **Method:** GET
+- **Parameters:**
+- - offset: The number of Pokémon to skip before starting to fetch (default: 0).
+- - limit: The maximum number of Pokémon to return per request (default: 20).
+- **Response:** A list of Pokémon with basic information (name, URL to images, etc.).
 
-To build the project run:
+2. **Get Pokémon Details:**
+   Fetches detailed information about a specific Pokémon, including its stats, abilities, and other attributes.
 
-```bash
-ng build
-```
+- **URL:** https://pokeapi.co/api/v2/pokemon/{name}
+- **Method:** GET
+- **Parameters:**
+- - name: The name of the Pokémon to fetch details for (e.g., "bulbasaur").
+- **Response:** Detailed data about the Pokémon, such as abilities, stats, and images.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+3. **Get Pokémon Types:**
+   Fetches a list of all available Pokémon types (e.g., Water, Grass, Fire, Ghost, Flying).
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# pokedex
+- **URL:** https://pokeapi.co/api/v2/type
+- **Method:** GET
+- **Response:** A list of all Pokémon types that can be used to filter Pokémon in the app.
