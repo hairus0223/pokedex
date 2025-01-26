@@ -2,7 +2,8 @@
 
 Pokedox is an Angular application built with Ionic, Tailwind CSS, and Capacitor that allows Pokémon trainers to browse, view details, and favourite Pokémon. The application provides an infinite scrolling experience and allows filtering Pokémon by type (e.g., Water, Grass, Fire, Ghost, Flying).
 
-![image](https://github.com/user-attachments/assets/ac1d0ad9-2689-47d3-a0d0-5df7b91cdb36)
+![image](https://github.com/user-attachments/assets/e8abadca-fd50-49f1-b228-db21947ae7aa)
+
 
 ## Table of Contents
 
