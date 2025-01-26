@@ -2,12 +2,14 @@ export interface PokemonListResponse {
   count: number;
   next: string | null;
   previous: string | null;
-  results: PokemonListItem[];
+  results: Pokemon[];
 }
 
-export interface PokemonListItem {
+export interface Pokemon {
   name: string;
-  url: string;
+  url?: string;
+  image?: string;
+  types?: string[];
 }
 
 export interface PokemonDetails {
@@ -21,12 +23,22 @@ export interface PokemonDetails {
   stats: PokemonStat[];
 }
 
+export interface PokemonTypeResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: PokemonType[];
+}
+export interface PokemonWithTypes {
+  name: string;
+  url: string;
+  types: string[];
+}
+
 export interface PokemonType {
-  slot: number;
-  type: {
-    name: string;
-    url: string;
-  };
+  name: string;
+  url: string;
+  type?: any;
 }
 
 export interface PokemonAbility {
